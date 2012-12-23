@@ -55,6 +55,11 @@ class MethodHack(object):
         return self.application(environ, start_response)
 
     def _munge_request_method(self, environ):
+        """
+        Do the actual work: look for header or query
+        paramter and reset REQUEST_METHOD if one
+        of those is set.
+        """
         header = environ.get('HTTP_X_HTTP_METHOD', None)
         real_method = environ['REQUEST_METHOD']
         query_dict = cgi.parse_qs(environ['QUERY_STRING'])
@@ -62,13 +67,17 @@ class MethodHack(object):
         tunnel_method = header or param or real_method
 
         if real_method == 'POST':
-            logging.debug('overriding POST method to %s' % tunnel_method)
+            logging.debug('overriding POST method to %s', tunnel_method)
             environ['REQUEST_METHOD'] = tunnel_method
-        elif real_method == 'GET' and (tunnel_method == 'GET' or tunnel_method == 'HEAD'):
-            logging.debug('overriding GET method to %s' % tunnel_method)
+        elif real_method == 'GET' and (tunnel_method == 'GET'
+                or tunnel_method == 'HEAD'):
+            logging.debug('overriding GET method to %s', tunnel_method)
             environ['REQUEST_METHOD'] = tunnel_method
 
 
 def init(config):
+    """
+    Initialize plugin by adding middleware to server_request_filters.
+    """
     config['server_request_filters'].insert(
             config['server_request_filters'].index(Query), MethodHack)
