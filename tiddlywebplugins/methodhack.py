@@ -34,7 +34,11 @@ At this time TiddlyWeb client code such as TiddlyWebAdaptor
 does NOT tunnel.
 """
 
-import cgi
+try:
+    from urlparse import parse_qs
+except ImportError:
+    from cgi import parse_qs
+
 import logging
 
 from tiddlyweb.web.query import Query
@@ -62,7 +66,7 @@ class MethodHack(object):
         """
         header = environ.get('HTTP_X_HTTP_METHOD', None)
         real_method = environ['REQUEST_METHOD']
-        query_dict = cgi.parse_qs(environ['QUERY_STRING'])
+        query_dict = parse_qs(environ['QUERY_STRING'])
         param = query_dict.get('http_method', [None])[0]
         tunnel_method = header or param or real_method
 
