@@ -44,6 +44,8 @@ import logging
 from tiddlyweb.web.query import Query
 
 
+LOGGER = logging.getLogger(__name__)
+
 class MethodHack(object):
     """
     WSGI environment manipulator to override
@@ -71,11 +73,11 @@ class MethodHack(object):
         tunnel_method = header or param or real_method
 
         if real_method == 'POST':
-            logging.debug('overriding POST method to %s', tunnel_method)
+            LOGGER.debug('overriding POST method to %s', tunnel_method)
             environ['REQUEST_METHOD'] = tunnel_method
         elif real_method == 'GET' and (tunnel_method == 'GET'
                 or tunnel_method == 'HEAD'):
-            logging.debug('overriding GET method to %s', tunnel_method)
+            LOGGER.debug('overriding GET method to %s', tunnel_method)
             environ['REQUEST_METHOD'] = tunnel_method
 
 

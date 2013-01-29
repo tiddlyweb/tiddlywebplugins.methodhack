@@ -2,7 +2,7 @@ AUTHOR = 'Chris Dent'
 AUTHOR_EMAIL = 'cdent@peermore.com'
 NAME = 'tiddlywebplugins.methodhack'
 DESCRIPTION = 'Allow PUT and DELETE to tunnel over POST'
-VERSION = '0.3'
+VERSION = '0.4'
 
 
 import os
